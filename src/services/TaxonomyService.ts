@@ -18,20 +18,6 @@ export class TaxonomyService {
     return termsetID;
   }
 
-  public async getTaxonomyHiddenTextfield (fieldName: string) {
-    const mmFieldInfo = await sp.web.fields.getByInternalNameOrTitle(fieldName).get();
-    const parser = new DOMParser();
-    const xmlField = parser.parseFromString(mmFieldInfo.SchemaXml, "text/xml");
-    const properties = xmlField.getElementsByTagName("ArrayOfProperty")[0].childNodes;
-    let textfieldID: string = "";
-    properties.forEach(prop => {
-      if (prop.childNodes[0].textContent == "TextField") {
-        textfieldID = prop.childNodes[1].textContent;
-      }
-    });
-    return textfieldID;
-  }
-  
   public async getTermset (termsetID: string) {
     // list all the terms available in this term set by term set id
     const termset: IOrderedTermInfo[] = await sp.termStore.sets.getById(termsetID).getAllChildrenAsOrderedTree();
@@ -66,8 +52,7 @@ export class TaxonomyService {
         ctnodes.push(ctnode);
       });
       node.children = ctnodes;
-    }
-    
+    }   
     return node;
   }
 

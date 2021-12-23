@@ -22,6 +22,8 @@ Copy:
 
 ![Copying the file to a new one with (only) the target term in the managed metadata column (Copy)](./assets/05Copy.gif)
 
+For further details see the author's [blog post](https://mmsharepoint.wordpress.com/2021/12/)
+
 ## Used SharePoint Framework Version
 
 ![version](https://img.shields.io/badge/version-1.13-green.svg)
@@ -63,16 +65,22 @@ Version|Date|Comments
 - in the command-line run:
   - **npm install**
   - **gulp serve**
-
-> Include any additional steps as needed.
+- Instantiate the webpart in the online workbench on a site where prerequisites are met:
+  - A hierarchical Termset bound to a managed metadata column
+  - A document library using that managed metadata column and several documents with selected terms
+- In the webpart properties set the library name and the internal field name of the managed metadata column
+- Done!
 
 ## Features
 
 This web part illustrates the following concepts:
 
 - Use HTML5 drag and drop event handling
-- Update Managed Metadata columns with PnPJS
-- 
+  - Use options by modifier key pressed
+- Update Managed Metadata columns with [PnPJS](https://pnp.github.io/pnpjs/)
+- Build trees with recursive components
+- Traverse trees with callback functions
+- [FluentUI React File Type Icons](https://www.npmjs.com/package/@fluentui/react-file-type-icons)
 - [FluentUI Contextual Menu](https://developer.microsoft.com/en-us/fluentui#/controls/web/contextualmenu)
 
 

@@ -28,9 +28,9 @@ export const TaxonomyFileExplorer: React.FC<ITaxonomyFileExplorerProps> = (props
       termnodetree = JSON.parse(termnodetreeStr);
     }
 
-    const spSvc: SPService = new SPService(props.listName, props.fieldName);
-    const files = await spSvc.getItems(termsetID);
-    setSpSvc(spSvc);
+    const spSrvc: SPService = new SPService(props.listName, props.fieldName);
+    const files = await spSrvc.getItems(termsetID);
+    setSpSvc(spSrvc);
     updateFiles(files, termnodetree);
   };
 

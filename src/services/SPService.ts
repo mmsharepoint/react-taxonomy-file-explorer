@@ -1,15 +1,13 @@
 import { sp } from "@pnp/sp";
-import { constructKeytip } from "office-ui-fabric-react";
 import { IFileItem } from "../model/IFileItem";
-import { TaxonomyService } from "./TaxonomyService";
 
 export class SPService {
   private listName: string;
   private fieldName: string;
 
   constructor (listname: string, fieldname: string) {
-    this.listName = listname; // "Documents"
-    this.fieldName = fieldname; // "FolderStructure"
+    this.listName = listname;
+    this.fieldName = fieldname;
   }
 
   public async getItems (termsetID: string): Promise<IFileItem[]> {

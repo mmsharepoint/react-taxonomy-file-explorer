@@ -1,12 +1,9 @@
 import * as React from 'react';
 import styles from './TermLabel.module.scss';
-import { initializeFileTypeIcons } from '@fluentui/react-file-type-icons';
 import { ContextualMenu, IContextualMenuItem } from "office-ui-fabric-react/lib/ContextualMenu";
 import { Icon } from 'office-ui-fabric-react/lib/Icon';
 import { ITermLabelProps } from "./ITermLabelProps";
 import { IFileItem } from '../../../model/IFileItem';
-
-initializeFileTypeIcons(undefined);
 
 export const TermLabel: React.FC<ITermLabelProps> = (props) => {
   const linkRef = React.useRef(null);
