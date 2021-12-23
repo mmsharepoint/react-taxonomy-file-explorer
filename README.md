@@ -22,7 +22,7 @@ Copy:
 
 ![Copying the file to a new one with (only) the target term in the managed metadata column (Copy)](./assets/05Copy.gif)
 
-For further details see the author's [blog post](https://mmsharepoint.wordpress.com/2021/12/)
+For further details see the author's [blog post](https://mmsharepoint.wordpress.com/2021/12/23/a-sharepoint-file-explorer-based-on-managed-metadata-and-spfx/)
 
 ## Used SharePoint Framework Version
 
