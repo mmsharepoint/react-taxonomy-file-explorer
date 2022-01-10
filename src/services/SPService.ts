@@ -75,7 +75,6 @@ export class SPService {
     await sp.web.getFileByServerRelativePath(decodeURI(fileUrl.pathname)).copyByPath(destinationUrl, false, true);
     const newFileItemPromise = await sp.web.getFileByServerRelativePath(destinationUrl).getItem();
     const newFileItem = await newFileItemPromise.get();
-    console.log(newFileItem);
     const itemID: number = parseInt(newFileItem.Id);
 
     await sp.web.lists.getByTitle(this.listName).items.getById(itemID).validateUpdateListItem([{
@@ -91,6 +90,32 @@ export class SPService {
       termGuid: [newTaxonomyValue.split('|')[1]],
       title: newFilename,
       url: fileUrl.host + '/' + destinationUrl
+    };
+    return newFile;
+  }
+
+  public async newTaxonomyItemByUpload (file: any, fieldName: string, newTaxonomyValue: string): Promise<IFileItem> {
+    const libraryRoot = await sp.web.lists.getByTitle(this.listName).rootFolder.get();
+    const result = await sp.web.getFolderByServerRelativeUrl(libraryRoot.ServerRelativeUrl).files.add(file.name, file, true);
+    const fileNameParts = result.data.Name.split('.');
+    const newFileItemPromise = await sp.web.getFileByServerRelativePath(result.data.ServerRelativeUrl).getItem();
+    const newFileItem = await newFileItemPromise.get();
+
+    const itemID: number = parseInt(newFileItem.Id);
+    await sp.web.lists.getByTitle(this.listName).items.getById(itemID).validateUpdateListItem([{
+      ErrorMessage: null,
+      FieldName: fieldName,
+      FieldValue: newTaxonomyValue,
+      HasException: false
+    }]);
+
+    const newFile: IFileItem = {
+      extension: fileNameParts[fileNameParts.length - 1],
+      id: itemID.toString(),
+      taxValue: [newTaxonomyValue],
+      termGuid: [newTaxonomyValue.split('|')[1]],
+      title: file.name,
+      url: result.data.ServerRelativeUrl
     };
     return newFile;
   }

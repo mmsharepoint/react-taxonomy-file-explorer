@@ -9,4 +9,5 @@ export interface ITermLabelProps {
     addTerm: (file: IFileItem, newValue: string) => void;
     replaceTerm: (file: IFileItem, newValue: string) => void;
     copyFile: (file: IFileItem, newValue: string) => void;
+    uploadFile: (file: any, newValue: string) => void;
 }

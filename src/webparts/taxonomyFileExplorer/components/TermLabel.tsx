@@ -27,14 +27,24 @@ export const TermLabel: React.FC<ITermLabelProps> = (props) => {
 
   const drop = (ev) => {    
     ev.preventDefault();
-    var data = ev.dataTransfer.getData("text");
-    const file: IFileItem = JSON.parse(data);
-    setDroppedFile(file);
-    if (ev.ctrlKey) {
-      setShowContextualMenu(true);
+    // Drop is a file or a FileLabel
+    if (ev.dataTransfer.types.indexOf('Files') > -1) {
+      const dt = ev.dataTransfer;
+      let files =  Array.prototype.slice.call(dt.files);
+      files.forEach(fileToUpload => {
+        uploadWithNewTerm(fileToUpload);
+      });
     }
     else {
-      addNewTerm(file); // Default option: Simply add the new (target) term to existing ones
+      var data = ev.dataTransfer.getData("text");
+      const file: IFileItem = JSON.parse(data);
+      setDroppedFile(file);
+      if (ev.ctrlKey) {
+        setShowContextualMenu(true);
+      }
+      else {
+        addNewTerm(file); // Default option: Simply add the new (target) term to existing ones
+      }
     }
   };
 
@@ -60,8 +70,12 @@ export const TermLabel: React.FC<ITermLabelProps> = (props) => {
 
   const copyWithNewTerm = (file: IFileItem) => {
     const newTaxonomyValue = `${props.node.name}|${props.node.guid}`;
-    console.log(file);
     props.copyFile(file, newTaxonomyValue);
+  };
+
+  const uploadWithNewTerm = (file: any) => {
+    const newTaxonomyValue = `${props.node.name}|${props.node.guid}`;
+    props.uploadFile(file, newTaxonomyValue);
   };
 
   const currentExpandIcon = showChildren? <Icon className={styles.icon} iconName="ChevronDown" onClick={toggleIcon} />:<Icon className={styles.icon} iconName="ChevronRight" onClick={toggleIcon} />;
@@ -112,7 +126,8 @@ export const TermLabel: React.FC<ITermLabelProps> = (props) => {
                                                                 selectedNode={props.selectedNode}
                                                                 addTerm={props.addTerm}
                                                                 replaceTerm={props.replaceTerm}
-                                                                copyFile={props.copyFile} />; })}
+                                                                copyFile={props.copyFile}
+                                                                uploadFile={props.uploadFile} />; })}
           </ul>}            
       </li>
   );

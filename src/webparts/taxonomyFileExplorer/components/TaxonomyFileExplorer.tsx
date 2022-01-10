@@ -82,6 +82,11 @@ export const TaxonomyFileExplorer: React.FC<ITaxonomyFileExplorerProps> = (props
     loadNewFiles(newFile);
   };
 
+  const uploadFile =async (file: any, newTaxonomyValue: string) => {
+    const newFile = await spSvc.newTaxonomyItemByUpload(file, props.fieldName, newTaxonomyValue)
+    loadNewFiles(newFile);
+  }
+
   React.useEffect(() => {
     buildTree();
   }, []);
@@ -98,7 +103,8 @@ export const TaxonomyFileExplorer: React.FC<ITaxonomyFileExplorerProps> = (props
                                                     selectedNode={selectedTermnode}
                                                     addTerm={addTerm}
                                                     replaceTerm={replaceTerm}
-                                                    copyFile={copyFile} />; })}
+                                                    copyFile={copyFile}
+                                                    uploadFile={uploadFile} />; })}
             </ul>
           </div>
           <div className={ styles.column }>
