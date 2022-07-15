@@ -16,7 +16,7 @@ export const TaxonomyFileExplorer: React.FC<ITaxonomyFileExplorerProps> = (props
   const [selectedTermnode, setSelectedTermnode] = React.useState<string>("");
 
   const buildTree = async () => {
-    const taxSvc: TaxonomyService = new TaxonomyService();
+    const taxSvc: TaxonomyService = new TaxonomyService(props.serviceScope);
     const termsetID = await taxSvc.getTermsetInfo(props.fieldName);
     let termnodetree: ITermNode[];
     const termnodetreeStr = sessionStorage.getItem(`Termtree_${termsetID}`);
@@ -28,14 +28,14 @@ export const TaxonomyFileExplorer: React.FC<ITaxonomyFileExplorerProps> = (props
       termnodetree = JSON.parse(termnodetreeStr);
     }
 
-    const spSrvc: SPService = new SPService(props.listName, props.fieldName);
+    const spSrvc: SPService = new SPService(props.serviceScope, props.listName, props.fieldName);
     const files = await spSrvc.getItems(termsetID);
     setSpSvc(spSrvc);
     updateFiles(files, termnodetree);
   };
 
   const updateFiles = (files: IFileItem[], termnodetree: ITermNode[]) => {
-    const taxSvc: TaxonomyService = new TaxonomyService();
+    const taxSvc: TaxonomyService = new TaxonomyService(props.serviceScope);
     termnodetree = taxSvc.incorporateFiles(termnodetree, files);
     setFileItems(files);
     setTerms(termnodetree);

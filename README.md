@@ -26,7 +26,7 @@ For further details see the author's [blog post](https://mmsharepoint.wordpress.
 
 ## Used SharePoint Framework Version
 
-![version](https://img.shields.io/badge/version-1.13-green.svg)
+![version](https://img.shields.io/badge/version-1.15-green.svg)
 
 ## Applies to
 
@@ -51,6 +51,7 @@ react-taxonomy-file-explorer| [Markus Moeller](https://github.com/mmsharepoint) 
 Version|Date|Comments
 -------|----|--------
 1.0|December 26, 2021|Initial release
+1.1|July 16, 2021|Added expand/collapse all, upgraded to SPFx 1.15.0, upgraded to PnPJS V3.5.0
 
 ## Disclaimer
 
