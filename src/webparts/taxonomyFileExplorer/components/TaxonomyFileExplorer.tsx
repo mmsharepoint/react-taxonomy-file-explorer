@@ -7,6 +7,7 @@ import { TaxonomyService } from '../../../services/TaxonomyService';
 import { SPService } from '../../../services/SPService';
 import { FileLabel } from './FileLabel';
 import { TermLabel } from './TermLabel';
+import { Icon } from 'office-ui-fabric-react';
 
 export const TaxonomyFileExplorer: React.FC<ITaxonomyFileExplorerProps> = (props) => {
   const [spSvc, setSpSvc] = React.useState<SPService>();
@@ -14,12 +15,14 @@ export const TaxonomyFileExplorer: React.FC<ITaxonomyFileExplorerProps> = (props
   const [terms, setTerms] = React.useState<ITermNode[]>([]);
   const [shownFiles, setShownFiles] = React.useState<IFileItem[]>([]);
   const [selectedTermnode, setSelectedTermnode] = React.useState<string>("");
+  const [collapseAll, setCollapseAll] = React.useState<boolean>(false);
+  const [expandAll, setExpandAll] = React.useState<boolean>(false);
 
   const buildTree = async () => {
     const taxSvc: TaxonomyService = new TaxonomyService(props.serviceScope);
-    const termsetID = await taxSvc.getTermsetInfo(props.fieldName);
+    const termsetID: string = await taxSvc.getTermsetInfo(props.fieldName);
     let termnodetree: ITermNode[];
-    const termnodetreeStr = sessionStorage.getItem(`Termtree_${termsetID}`);
+    const termnodetreeStr: string = sessionStorage.getItem(`Termtree_${termsetID}`);
     if (termnodetreeStr === null) {
       termnodetree = await taxSvc.getTermset(termsetID);
       sessionStorage.setItem(`Termtree_${termsetID}`, JSON.stringify(termnodetree));
@@ -29,7 +32,7 @@ export const TaxonomyFileExplorer: React.FC<ITaxonomyFileExplorerProps> = (props
     }
 
     const spSrvc: SPService = new SPService(props.serviceScope, props.listName, props.fieldName);
-    const files = await spSrvc.getItems(termsetID);
+    const files: IFileItem[] = await spSrvc.getItems(termsetID);
     setSpSvc(spSrvc);
     updateFiles(files, termnodetree);
   };
@@ -41,13 +44,13 @@ export const TaxonomyFileExplorer: React.FC<ITaxonomyFileExplorerProps> = (props
     setTerms(termnodetree);
   };
 
-  const renderFiles = (files: IFileItem[]) => {
+  const renderFiles = React.useCallback((files: IFileItem[]) => {
     setShownFiles(files);
-  };
+  },[setShownFiles]);
 
-  const resetChecked = (newNodeID: string) => {
+  const resetChecked = React.useCallback((newNodeID: string) => {
     setSelectedTermnode(newNodeID);
-  };
+  },[setSelectedTermnode]);
 
   const reloadFiles = (file: IFileItem) => {
     const newFiles: IFileItem[] = [];
@@ -67,40 +70,55 @@ export const TaxonomyFileExplorer: React.FC<ITaxonomyFileExplorerProps> = (props
     updateFiles(newFiles, terms);
   };
 
-  const addTerm = (file: IFileItem, newTaxonomyValue: string) => {
+  const addTerm = React.useCallback((file: IFileItem, newTaxonomyValue: string) => {
     spSvc.updateTaxonomyItemByAdd(file, props.fieldName, newTaxonomyValue);
     reloadFiles(file);
-  };
+  },[spSvc, fileItems, terms]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const replaceTerm = (file: IFileItem, newTaxonomyValue: string) => {
+  const replaceTerm = React.useCallback((file: IFileItem, newTaxonomyValue: string) => {
     spSvc.updateTaxonomyItemByReplace(file, props.fieldName, newTaxonomyValue);
     reloadFiles(file);
-  };
+  },[spSvc, fileItems, terms]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const copyFile = async (file: IFileItem, newTaxonomyValue: string) => {
+  const copyFile = React.useCallback(async (file: IFileItem, newTaxonomyValue: string) => {
     const newFile = await spSvc.newTaxonomyItemByCopy(file, props.fieldName, newTaxonomyValue);
     loadNewFiles(newFile);
-  };
+  },[spSvc, fileItems, terms]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const uploadFile =async (file: any, newTaxonomyValue: string) => {
+  const uploadFile = React.useCallback(async (file: any, newTaxonomyValue: string) => {
     const newFile = await spSvc.newTaxonomyItemByUpload(file, props.fieldName, newTaxonomyValue)
     loadNewFiles(newFile);
-  }
+  },[spSvc, fileItems, terms]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const expandAllTerms = React.useCallback(() => {
+    setExpandAll(true);
+    setCollapseAll(false);
+  },[setExpandAll, setCollapseAll]);
+
+  const collapseAllTerms = React.useCallback(() => {
+    setCollapseAll(true);
+    setExpandAll(false);
+  },[setExpandAll, setCollapseAll]);
 
   React.useEffect(() => {
-    buildTree();
-  }, []);
+    buildTree(); // eslint-disable-line @typescript-eslint/no-floating-promises
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className={ styles.taxonomyFileExplorer }>
-      <div className={ styles.container }>
+      <div className={ styles.container }>            
         <div className={ styles.row }>
           <div className={ styles.column }>
+            <Icon className={styles.icon} iconName="ExploreContent" onClick={expandAllTerms} /> {/*  Alt: DoubleChevronRight */}
+            <Icon className={styles.icon} iconName="CollapseContent" onClick={collapseAllTerms} /> {/*  Alt: DoubleChevronDown */}
             <ul>
-              {terms.map(nc => { return <TermLabel node={nc} 
+              {terms.map(nc => { return <TermLabel node={nc}
+                                                    key={nc.guid}
                                                     renderFiles={renderFiles} 
                                                     resetChecked={resetChecked} 
                                                     selectedNode={selectedTermnode}
+                                                    collapseAll={collapseAll}
+                                                    expandAll={expandAll}
                                                     addTerm={addTerm}
                                                     replaceTerm={replaceTerm}
                                                     copyFile={copyFile}
@@ -111,7 +129,7 @@ export const TaxonomyFileExplorer: React.FC<ITaxonomyFileExplorerProps> = (props
           {shownFiles.length > 0 && 
             <ul>
                 {shownFiles.map(f => {
-                    return <FileLabel file={f} />;
+                    return <FileLabel file={f} key={f.id} />;
                 })}
             </ul>}
           </div>
