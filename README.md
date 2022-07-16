@@ -22,6 +22,10 @@ Copy:
 
 ![Copying the file to a new one with (only) the target term in the managed metadata column (Copy)](./assets/05Copy.gif)
 
+[UPDATE] Collapse and expand all:
+
+![Collapse and expand all](./assets/ExpandCollapseAll.gif)
+
 For further details see the author's [blog post](https://mmsharepoint.wordpress.com/2021/12/23/a-sharepoint-file-explorer-based-on-managed-metadata-and-spfx/)
 
 ## Used SharePoint Framework Version
@@ -51,7 +55,7 @@ react-taxonomy-file-explorer| [Markus Moeller](https://github.com/mmsharepoint) 
 Version|Date|Comments
 -------|----|--------
 1.0|December 26, 2021|Initial release
-1.1|July 16, 2021|Added expand/collapse all, upgraded to SPFx 1.15.0, upgraded to PnPJS V3.5.0
+1.1|July 16, 2021|Added expand/collapse all, upgraded to SPFx 1.15.0, upgraded to PnPJS V3.5.1
 
 ## Disclaimer
 
