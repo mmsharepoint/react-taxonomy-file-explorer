@@ -7,19 +7,13 @@ import "@pnp/sp/fields";
 import { IFileItem } from "../model/IFileItem";
 import { ITermNode } from "../model/ITermNode";
 
-// export interface ITaxonomyService {
-//   getTermsetInfo(fieldName: string): Promise<string>;
-//   getTermset(termsetID: string): Promise<ITermNode[]>;
-// }
-
 export class TaxonomyService {
-  // public static readonly serviceKey: ServiceKey<ITaxonomyService> = ServiceKey.create<ITaxonomyService>('SPFx:TaxonomyService', TaxonomyService); 
   private _sp: SPFI;
   
   public constructor (serviceScope: ServiceScope) {
     serviceScope.whenFinished(() => {
       const pageContext: PageContext = serviceScope.consume(PageContext.serviceKey);
-      this._sp = spfi(pageContext.web.absoluteUrl).using(SPFx({ pageContext }));
+      this._sp = spfi().using(SPFx({ pageContext }));
     });
   }
 

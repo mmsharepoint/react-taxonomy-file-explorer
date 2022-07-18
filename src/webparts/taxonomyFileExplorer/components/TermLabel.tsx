@@ -11,6 +11,7 @@ export const TermLabel: React.FC<ITermLabelProps> = (props) => {
   const [countDocuments, setCountDocuments] = React.useState<number>(props.node.childDocuments);
   const [showContextualMenu, setShowContextualMenu] = React.useState<boolean>(false);
   const [droppedFile, setDroppedFile] = React.useState<IFileItem>();
+  const [dragEntered, setDragEntered] = React.useState<boolean>(false);
 
   const toggleIcon = React.useCallback(() => {
     setShowChildren(!showChildren);
@@ -64,6 +65,14 @@ export const TermLabel: React.FC<ITermLabelProps> = (props) => {
     ev.preventDefault();
   },[]);
 
+  const dragEnter = React.useCallback((ev) => {
+    setDragEntered(true);
+  },[setDragEntered]);
+
+  const dragLeave = React.useCallback((ev) => {
+    setDragEntered(false);
+  },[setDragEntered]);
+
   const replaceByNewTerm = (file: IFileItem) => {
     const newTaxonomyValue: string = `${props.node.name}|${props.node.guid}`;
     file.termGuid = [props.node.guid];
@@ -112,7 +121,13 @@ export const TermLabel: React.FC<ITermLabelProps> = (props) => {
   }, [props.node.subFiles]); // eslint-disable-line react-hooks/exhaustive-deps
   return (
     <li className={styles.termLabel}>            
-      <div ref={linkRef} className={`${styles.label} ${props.selectedNode===props.node.guid ? styles.checkedLabel : ""}`} onClick={nodeSelected} onDrop={drop} onDragOver={dragOver}>
+      <div ref={linkRef} className={`${styles.label} ${props.selectedNode===props.node.guid ? styles.checkedLabel : ""} 
+                                      ${dragEntered ? styles.dragEnter : ""}`} 
+                          onClick={nodeSelected} 
+                          onDrop={drop} 
+                          onDragOver={dragOver}
+                          onDragEnter={dragEnter}
+                          onDragLeave={dragLeave}>
         <label>
           {props.node.children.length > 0 ? currentExpandIcon : <i className={styles.emptyicon}>&nbsp;</i>}
           <Icon className={styles.icon} iconName="FabricFolder" />
